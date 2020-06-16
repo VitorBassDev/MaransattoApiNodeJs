@@ -3,7 +3,7 @@ const { response } = require('express');
 const router = express.Router();
 
 /**
- * CRIAÇÃO DAS ROTAS - PRODUTOS 
+ * CRIAÇÃO DAS ROTAS - PEDIDOS 
  * GET | POST | PATCH | DELETE 
  */
 
@@ -12,7 +12,7 @@ const router = express.Router();
  */
 router.get('/', (request, response, next) => {
     return response.status(200).send({
-        Metodo_GET: 'Retorna os Produtos'
+        Metodo_GET: 'Retorna os Pedidos'
     });
 });
 
@@ -21,7 +21,7 @@ router.get('/', (request, response, next) => {
  */
 router.post('/', (request , response, next) =>{
     return response.status(201).json({
-        Metodo_POST: 'Insere um Produtos'
+        Metodo_POST: 'Insere um Pedido'
     });
     
 });
@@ -31,7 +31,7 @@ router.post('/', (request , response, next) =>{
  */
 router.patch('/', (request, response, next) => {
     return response.status(201).json({
-        Metodo_PATCH: 'Altera os Produtos'
+        Metodo_PATCH: 'Altera os Pedidos'
     });
 });
 
@@ -41,7 +41,7 @@ router.patch('/', (request, response, next) => {
 router.delete('/', (request, response, next) => {
        
     return response.status(201).json({
-        Metodo_DELETE: 'Deleta os Produtos'
+        Metodo_DELETE: 'Deleta os Pedidos'
     });
 });
 
@@ -49,19 +49,11 @@ router.delete('/', (request, response, next) => {
 /**
  * Passando Parametros nas ROTAS para realizar GET/BUSCAS
  */
-router.get('/:id_produto', (request, response, next) =>{
-    const id = request.params.id_produto;
-    
-    if(id == 'especial'){
-        return response.status(200).json({
-            Metodo_GET_PARAMETRO: 'Usando a Rota POST dentro da Rota de Produtos com Parametro',
-            id: id
+router.get('/:id_pedido', (request, response, next) =>{
+    const id = request.params.id_pedido;
+    return response.status(200).json({
+        Metodo_GET_PARAMETRO: 'Detalhes do Pedido'
         });
-    } else{
-        return response.status(200).json({
-            Metodo_GET_PARAMETRO: 'ID não encontrado '
-        });
-    }
-});
+    });
 
 module.exports = router;
