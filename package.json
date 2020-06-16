@@ -2,14 +2,19 @@
   "name": "rest-api",
   "version": "1.0.0",
   "description": "Aplicação de Estudos | https://youtu.be/hAAj27hgPFg",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "startn": "nodemon node server.js"
   },
   "author": "Vítor Guedes",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1", 
-    "http": "0.0.1-security"
+    "express": "^4.17.1",
+    "http": "0.0.1-security",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
   }
 }
