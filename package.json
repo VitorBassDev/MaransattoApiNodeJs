@@ -4,11 +4,12 @@
   "description": "Aplicação de Estudos | https://youtu.be/hAAj27hgPFg",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
   "author": "Vítor Guedes",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1", 
+    "http": "0.0.1-security"
   }
 }
