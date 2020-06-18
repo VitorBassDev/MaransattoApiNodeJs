@@ -1,6 +1,7 @@
 const express = require ('express');
-//const { response } = require('express');
 const app = express();
+//app.use(cors());
+
 // MONITORAR LOGS
 const morgan = require('morgan');
 

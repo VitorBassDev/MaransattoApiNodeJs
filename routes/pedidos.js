@@ -39,7 +39,6 @@ router.patch('/', (request, response, next) => {
  * ROTA DELETE(DELETAR)
  */
 router.delete('/', (request, response, next) => {
-       
     return response.status(201).json({
         Metodo_DELETE: 'Deleta os Pedidos'
     });

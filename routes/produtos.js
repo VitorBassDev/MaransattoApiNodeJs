@@ -2,6 +2,9 @@ const express = require ('express');
 const { response } = require('express');
 const router = express.Router();
 
+// SETAR CONFIGURAÇÃO DO MYSQL - USAR O BANCO DE DADOS
+const mysql = require ('../mysql').pool;
+
 /**
  * CRIAÇÃO DAS ROTAS - PRODUTOS 
  * GET | POST | PATCH | DELETE 
@@ -20,10 +23,29 @@ router.get('/', (request, response, next) => {
  * ROTA POST(INSERIR)
  */
 router.post('/', (request , response, next) =>{
-    return response.status(201).json({
-        Metodo_POST: 'Insere um Produtos'
-    });
+
+    // ABRIR CONEXÃO COM O BANCO DE DADOS
+    mysql.getConnection((error, conn) => {
     
+        conn.query(
+            // REALIZAR UM INSERT NO BANCO DE DADOS ECOOMERCE NA TABLEA PRODUTOS
+            'INSERT INTO produtos (nome, preco) VALUES (?,?)',
+            [request.body.nome, request.body.preco ],
+                (error, resultado, field) => {
+                conn.release();
+                    if(error){
+                        return response.status(500).send({
+                            error: error,
+                            response:null
+                        });
+                    }
+                    return response.status(201).json({
+                        Metodo_POST: 'Produto Inserido com Sucesso',
+                        id_produto: resultado.insertId
+                    });
+                }
+        );
+    });   
 });
 
 /**
@@ -39,7 +61,6 @@ router.patch('/', (request, response, next) => {
  * ROTA DELETE(DELETAR)
  */
 router.delete('/', (request, response, next) => {
-       
     return response.status(201).json({
         Metodo_DELETE: 'Deleta os Produtos'
     });
