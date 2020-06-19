@@ -13,8 +13,7 @@
     "express": "^4.17.1",
     "http": "0.0.1-security",
     "morgan": "^1.10.0",
-    
-    "mysqli": "^3.0.11"
+    "mysql": "^2.18.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
