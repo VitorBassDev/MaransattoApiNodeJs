@@ -2,7 +2,8 @@ const express = require ('express');
 const router = express.Router();
 
 // SETAR CONFIGURAÇÃO DO MYSQL - USAR O BANCO DE DADOS
-const mysql = require ('../mysql');
+const mysqlBd = require ('../mysql');
+
 
 /**
  * CRIAÇÃO DAS ROTAS - PRODUTOS 
@@ -14,6 +15,28 @@ const mysql = require ('../mysql');
  */
 router.get('/', (request, response, next) => {
 
+    
+    mysqlBd.connection.connect(function(err, resultado){
+			
+			mysqlBd.connection.query('SELECT * FROM produtos', function (err, rows, fields){
+			
+			if(!err){
+				
+      	console.log('Resultado', rows);
+				return response
+				.status(200)
+				.send(
+					{
+						response: rows
+					});
+			
+			} else {
+      	console.error('Erro Pesquisar, verifique sua conexão: ' + err.stack);
+      	}
+    });
+
+
+    /*
     mysql.getConnection((error, conn) => {
         if (error) { return response.status(500).send({error: error } )}
         
@@ -25,7 +48,7 @@ router.get('/', (request, response, next) => {
             }
         )
     });
-  
+    */
 });
 
 /**
@@ -52,6 +75,7 @@ router.post('/', (request , response, next) =>{
                 }
         );
     });   
+});
 });
 
 /**
