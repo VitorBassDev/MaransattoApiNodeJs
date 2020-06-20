@@ -1,9 +1,8 @@
 const express = require ('express');
-const { response } = require('express');
 const router = express.Router();
 
 // SETAR CONFIGURAÇÃO DO MYSQL - USAR O BANCO DE DADOS
-const mysql = require ('../mysql').pool;
+const mysql = require ('../mysql');
 
 /**
  * CRIAÇÃO DAS ROTAS - PRODUTOS 
@@ -14,9 +13,19 @@ const mysql = require ('../mysql').pool;
  * ROTA GET(BUSCAR)
  */
 router.get('/', (request, response, next) => {
-    return response.status(200).send({
-        Metodo_GET: 'Retorna os Produtos'
+
+    mysql.getConnection((error, conn) => {
+        if (error) { return response.status(500).send({error: error } )}
+        
+        conn.query(
+            'SELECT * FROM produtos;',
+            (error, resultado, fields) => {
+                if (error) { return response.status(500).send({error: error } )}
+                return response.status(200).send({response: rerultado})
+            }
+        )
     });
+  
 });
 
 /**
@@ -26,19 +35,16 @@ router.post('/', (request , response, next) =>{
 
     // ABRIR CONEXÃO COM O BANCO DE DADOS
     mysql.getConnection((error, conn) => {
-    
+        if (error) { return response.status(500).send({error: error } )};
+
         conn.query(
             // REALIZAR UM INSERT NO BANCO DE DADOS ECOOMERCE NA TABLEA PRODUTOS
             'INSERT INTO produtos (nome, preco) VALUES (?,?)',
             [request.body.nome, request.body.preco ],
-                (error, resultado, field) => {
+                (error, resultado, fields) => {
                 conn.release();
-                    if(error){
-                        return response.status(500).send({
-                            error: error,
-                            response:null
-                        });
-                    }
+                    if (error) { return response.status(500).send({error: error } )};
+                    
                     return response.status(201).json({
                         Metodo_POST: 'Produto Inserido com Sucesso',
                         id_produto: resultado.insertId
