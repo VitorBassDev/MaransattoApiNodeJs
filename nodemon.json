@@ -1,9 +1,11 @@
 {
+    
     "env" :{
         "MYSQL_HOST": "localhost" ,
         "MYSQL_DATABASE": "ecommerce" ,
-        "MYSQL_USER": "root",
+        "MYSQL_USER": "nodejs",
         "MYSQL_PASSWORD" : "root" ,
         "MYSQL_PORT": 3360
     }
+    
 }

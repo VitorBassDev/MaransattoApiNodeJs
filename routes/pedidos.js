@@ -1,5 +1,4 @@
 const express = require ('express');
-const { response } = require('express');
 const router = express.Router();
 
 /**
@@ -10,17 +9,17 @@ const router = express.Router();
  /**
  * ROTA GET(BUSCAR)
  */
-router.get('/', (request, response, next) => {
-    return response.status(200).send({
+router.get('/', (req, res, next) => {
+    return res.status(200).send({
         Metodo_GET: 'Retorna os Pedidos'
     });
 });
 
 /**
- * ROTA POST(INSERIR)
+ ROTA POST(INSERIR)
  */
-router.post('/', (request , response, next) =>{
-    return response.status(201).json({
+router.post('/', (req, res, next) =>{
+    return res.status(201).json({
         Metodo_POST: 'Insere um Pedido'
     });
     
@@ -29,8 +28,8 @@ router.post('/', (request , response, next) =>{
 /**
  * ROTA PATCH(ALTERAR)
  */
-router.patch('/', (request, response, next) => {
-    return response.status(201).json({
+router.patch('/', (req, res, next) => {
+    return res.status(201).json({
         Metodo_PATCH: 'Altera os Pedidos'
     });
 });
@@ -38,8 +37,8 @@ router.patch('/', (request, response, next) => {
 /**
  * ROTA DELETE(DELETAR)
  */
-router.delete('/', (request, response, next) => {
-    return response.status(201).json({
+router.delete('/', (req, res, next) => {
+    return res.status(201).json({
         Metodo_DELETE: 'Deleta os Pedidos'
     });
 });
@@ -48,9 +47,9 @@ router.delete('/', (request, response, next) => {
 /**
  * Passando Parametros nas ROTAS para realizar GET/BUSCAS
  */
-router.get('/:id_pedido', (request, response, next) =>{
-    const id = request.params.id_pedido;
-    return response.status(200).json({
+router.get('/:id_pedido', (req, res, next) =>{
+    const id = req.params.id_pedido;
+    return res.status(200).json({
         Metodo_GET_PARAMETRO: 'Detalhes do Pedido'
         });
     });

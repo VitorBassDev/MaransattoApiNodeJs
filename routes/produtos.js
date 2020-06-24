@@ -1,10 +1,6 @@
 const express = require ('express');
 const router = express.Router();
 
-// SETAR CONFIGURAÇÃO DO MYSQL - USAR O BANCO DE DADOS
-const mysqlBd = require ('../mysql');
-
-
 /**
  * CRIAÇÃO DAS ROTAS - PRODUTOS 
  * GET | POST | PATCH | DELETE 
@@ -13,70 +9,49 @@ const mysqlBd = require ('../mysql');
  /**
  * ROTA GET(BUSCAR)
  */
-router.get('/', (request, response, next) => {
+router.get('/', (req, res, next) => {
 
-    
-    mysqlBd.connection.connect(function(err, resultado){
-			
-			mysqlBd.connection.query('SELECT * FROM produtos', function (err, rows, fields){
-			
-			if(!err){
-				
-      	console.log('Resultado', rows);
-				return response
-				.status(200)
-				.send(
-					{
-						response: rows
-					});
-			
-			} else {
-      	console.error('Erro Pesquisar, verifique sua conexão: ' + err.stack);
-      	}
+    // A COXEXÃO É ABERTA ATRAVÉS DA ROTA
+    // ABRIR CONEXÃO COM O BANCO DE DADOS
+    req.connection.query('SELECT * FROM produtos', (err, resultado) => {
+        if(err) return next(err);
+        return res.json({
+            produtos: resultado
+        });  
+        // CONEXÃO É DEVOLVIDA AO POOL E ENCERRADA ATRAVES DO MIDDLWARE
     });
-
-
+});
+     
+/**
+ * ROTA POST(INSERIR)
+ */
+router.post('/', (req , res, next) =>{
+    const produdo = {
+        nome: req.body.nome,
+        preco: req.body.preco
+    }
+    // A COXEXÃO É ABERTA ATRAVÉS DA ROTA
+    // ABRIR CONEXÃO COM O BANCO DE DADOS
+    req.connection.query(
+    'INSERT INTO produtos (nome, preco) VALUES (?, ?)', 
+    [req.body.nome, req.body.preco], function (err, resultado)  {
+    
+    if(err) return next(err);
+        return res.json({
+            Mensagem: 'Produto Inserido com Sucesso',
+            ProdutoCriado: produdo,
+            id_produto: resultado.insertId
+        })    
+    });
+    
     /*
-    mysql.getConnection((error, conn) => {
-        if (error) { return response.status(500).send({error: error } )}
-        
-        conn.query(
-            'SELECT * FROM produtos;',
-            (error, resultado, fields) => {
-                if (error) { return response.status(500).send({error: error } )}
-                return response.status(200).send({response: rerultado})
-            }
-        )
+    return req.status(201).json({
+		Metodo_POST: 'Produto Inserido com Sucesso',
+		id_produto: resultado.insertId
     });
     */
 });
 
-/**
- * ROTA POST(INSERIR)
- */
-router.post('/', (request , response, next) =>{
-
-    // ABRIR CONEXÃO COM O BANCO DE DADOS
-    mysql.getConnection((error, conn) => {
-        if (error) { return response.status(500).send({error: error } )};
-
-        conn.query(
-            // REALIZAR UM INSERT NO BANCO DE DADOS ECOOMERCE NA TABLEA PRODUTOS
-            'INSERT INTO produtos (nome, preco) VALUES (?,?)',
-            [request.body.nome, request.body.preco ],
-                (error, resultado, fields) => {
-                conn.release();
-                    if (error) { return response.status(500).send({error: error } )};
-                    
-                    return response.status(201).json({
-                        Metodo_POST: 'Produto Inserido com Sucesso',
-                        id_produto: resultado.insertId
-                    });
-                }
-        );
-    });   
-});
-});
 
 /**
  * ROTA PATCH(ALTERAR)
