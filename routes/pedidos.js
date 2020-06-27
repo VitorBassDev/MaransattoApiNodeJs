@@ -22,22 +22,22 @@ router.get('/', (req, res, next) => {
         if(err) {
           return next(err);
         }
-          const response = {
-            quantidade: result.length,
-            pedidos: result.map(pedido =>{
-              return {
-                id_pedido: pedido.id_pedido,
-                id_produto: pedido.produto_id_produto,
-                quantidade: pedido.quantidade,
-                  request: {
-                    tipo: 'GET',
-                    descricao: 'Retorna o dados de um pedido específico',
-                    url: 'http://localhost:4343/pedidos/' + pedido.id_pedido
-                  }
-                }                                                                                                                                                                                                                                                                                                                                   
-              })
+        const response = {
+          quantidade: result.length,
+          pedidos: result.map(pedido =>{
+            return {
+              id_pedido: pedido.id_pedido,
+              id_produto: pedido.produto_id_produto,
+              quantidade: pedido.quantidade,
+                request: {
+                  tipo: 'GET',
+                  descricao: 'Retorna o dados de um pedido específico',
+                  url: 'http://localhost:4343/pedidos/' + pedido.id_pedido
+                }
+              }                                                                                                                                                                                                                                                                                                                                   
+            })
           }
-          return res.status(200).send(response);
+        return res.status(200).send(response);
   });        
 });
      
@@ -126,20 +126,20 @@ router.delete('/', (req, res, next) => {
       if(err) {
         return next(err);
       }
-        const response = {
-          mensagem: 'Pedido Removido com Sucesso',
-          request: {
-              tipo: 'POST',
-              descricao: 'IClick para Inserir um novo Pedido',
-              url: 'http://localhost:4343/pedidos/',
-                body: {
-                  produto_id_produto: 'Number',
-                  quantidade: 'Number'
-                }
-            }
-        }
-      return res.status(202).send(response);
-    });
+      const response = {
+        mensagem: 'Pedido Removido com Sucesso',
+        request: {
+          tipo: 'POST',
+          descricao: 'IClick para Inserir um novo Pedido',
+          url: 'http://localhost:4343/pedidos/',
+            body: {
+              produto_id_produto: 'Number',
+              quantidade: 'Number'
+              }
+          }
+      }
+    return res.status(202).send(response);
+  });
 });
 
 /**
@@ -161,18 +161,18 @@ router.get('/:id_pedido', (req, res, next) =>{
           });
         }
         const response = {
-            mensagem: 'Pesquisa por id:',
-            produto: {
-              id_pedido: result[0].id_pedido,
-              id_produto: result[0].produto_id_produto,
-              quantidade: result[0].quantidade,
-              request: {
-                tipo: 'GET',
-                descricao: 'Retorna um Pedido Especifíco do ID passado',
-                url: 'http://localhost:4343/pedido/'
-              }
+          mensagem: 'Pesquisa por id:',
+          produto: {
+            id_pedido: result[0].id_pedido,
+            id_produto: result[0].produto_id_produto,
+            quantidade: result[0].quantidade,
+            request: {
+              tipo: 'GET',
+              descricao: 'Retorna um Pedido Especifíco do ID passado',
+              url: 'http://localhost:4343/pedido/'
             }
           }
+        }
       return res.status(200).send(response);               
     }); 
 });
