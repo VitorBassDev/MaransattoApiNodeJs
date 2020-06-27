@@ -2,56 +2,179 @@ const express = require ('express');
 const router = express.Router();
 
 /**
- * CRIAÇÃO DAS ROTAS - PEDIDOS 
+ * CRIAÇÃO DAS ROTAS - PRODUTOS 
  * GET | POST | PATCH | DELETE 
+ * req.connection ( 
+ *                  A COXEXÃO É ABERTA ATRAVÉS DA ROTA
+ *                  ABRIR CONEXÃO COM O BANCO DE DADOS
+ *                  CONEXÃO É DEVOLVIDA AO POOL E ENCERRADA ATRAVES DO MIDDLWARE
+ *                )
  */
 
  /**
  * ROTA GET(BUSCAR)
  */
 router.get('/', (req, res, next) => {
-    return res.status(200).send({
-        Metodo_GET: 'Retorna os Pedidos'
-    });
+  req.connection.query(
+    'SELECT * FROM pedidos', 
+      (err, result) => 
+      {
+        if(err) {
+          return next(err);
+        }
+          const response = {
+            quantidade: result.length,
+            pedidos: result.map(pedido =>{
+              return {
+                id_pedido: pedido.id_pedido,
+                id_produto: pedido.produto_id_produto,
+                quantidade: pedido.quantidade,
+                  request: {
+                    tipo: 'GET',
+                    descricao: 'Retorna o dados de um pedido específico',
+                    url: 'http://localhost:4343/pedidos/' + pedido.id_pedido
+                  }
+                }                                                                                                                                                                                                                                                                                                                                   
+              })
+          }
+          return res.status(200).send(response);
+  });        
 });
-
+     
 /**
- ROTA POST(INSERIR)
+ * ROTA POST(INSERIR)
  */
-router.post('/', (req, res, next) =>{
-    return res.status(201).json({
-        Metodo_POST: 'Insere um Pedido'
+router.post('/', (req , res, next) =>{
+  req.connection.query(
+    'INSERT INTO pedidos (produto_id_produto, quantidade) VALUES (?, ?)', 
+    [
+      req.body.id_produto,
+      req.body.quantidade
+    ], 
+      function (err, result){
+        if(err) {
+          return next(err);
+        }
+        const response = {
+          mensagem: 'Pedido Inserido com Sucesso',
+          pedidoCriado: {
+            id_pedido: result.id_pedido,
+            id_produto: req.body.id_produto,
+            quantidade: req.body.quantidade,
+            request: {
+              tipo: 'GET',
+              descricao: 'Sugestão Link para Inserir um Pedido',
+              url: 'http://localhost:4343/pedidos/'
+            }
+          }
+        }
+      return res.status(201).send(response);
     });
-    
 });
 
 /**
  * ROTA PATCH(ALTERAR)
  */
 router.patch('/', (req, res, next) => {
-    return res.status(201).json({
-        Metodo_PATCH: 'Altera os Pedidos'
-    });
+  const produto = 
+    {
+      produdo_id_produto: req.body.produdo_id_produto,
+      quantidade: req.body.quantidade
+    }
+    req.connection.query(
+      'UPDATE pedidos SET produto_id_produto = ?, quantidade = ? WHERE id_pedido = ?', 
+        [
+          req.body.id_produto,
+          req.body.quantidade,
+          req.body.id_pedido,
+        ],   
+        function (err, result)  {
+          if(err) {
+            return next(err);
+          }
+          
+          req.body.id_pedido = result.id_pedido
+          const response = {
+            mensagem: 'Produto Alterado com Sucesso',
+            produtoAlterado: {
+            id_pedido: result.id_pedido,
+            id_produto: req.body.id_produto,
+            quantidade: req.body.quantidade,
+            request: {
+              tipo: 'PATCH',
+              descricao: 'Retorna todos os Pedidos (Após Alterar)',
+              url: 'http://localhost:4343/produtos/' + req.body.id_pedido
+            }
+          }
+        }
+      return res.status(202).send(response);
+    }
+  )
 });
 
 /**
  * ROTA DELETE(DELETAR)
  */
 router.delete('/', (req, res, next) => {
-    return res.status(201).json({
-        Metodo_DELETE: 'Deleta os Pedidos'
+  req.connection.query(
+    'DELETE FROM pedidos WHERE id_pedido = ?', 
+    [
+    req.body.id_pedido
+    ],
+    
+    function (err, resultado)  {
+      if(err) {
+        return next(err);
+      }
+        const response = {
+          mensagem: 'Pedido Removido com Sucesso',
+          request: {
+              tipo: 'POST',
+              descricao: 'IClick para Inserir um novo Pedido',
+              url: 'http://localhost:4343/pedidos/',
+                body: {
+                  produto_id_produto: 'Number',
+                  quantidade: 'Number'
+                }
+            }
+        }
+      return res.status(202).send(response);
     });
 });
-
 
 /**
  * Passando Parametros nas ROTAS para realizar GET/BUSCAS
  */
 router.get('/:id_pedido', (req, res, next) =>{
-    const id = req.params.id_pedido;
-    return res.status(200).json({
-        Metodo_GET_PARAMETRO: 'Detalhes do Pedido'
-        });
-    });
+  req.connection.query(
+    'SELECT * FROM pedidos WHERE id_pedido = ?;', 
+      [
+        req.params.id_pedido
+      ], 
+      (err, result) => {
+        if(err) {
+          return next(err);
+        }
+          if(result.length == 0){
+            return res.status(404).send({
+            mensagem: 'ID Não Encontrado | Inexistente'
+          });
+        }
+        const response = {
+            mensagem: 'Pesquisa por id:',
+            produto: {
+              id_pedido: result[0].id_pedido,
+              id_produto: result[0].produto_id_produto,
+              quantidade: result[0].quantidade,
+              request: {
+                tipo: 'GET',
+                descricao: 'Retorna um Pedido Especifíco do ID passado',
+                url: 'http://localhost:4343/pedido/'
+              }
+            }
+          }
+      return res.status(200).send(response);               
+    }); 
+});
 
 module.exports = router;
