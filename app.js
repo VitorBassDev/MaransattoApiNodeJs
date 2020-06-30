@@ -15,6 +15,7 @@ MiddlewareDB = require('./middleware_bd');
 // CRIAR ROTA
 const rotaProdutos = require('./routes/produtos');
 const rotaPedidos  = require('./routes/pedidos');
+const rotaProdimagem  = require('./routes/prodimagem');
 //const rotaServicos = require('./routes/servicos');
 
 //SETAR LOGS
@@ -47,6 +48,7 @@ app.use(MiddlewareDB(pool));
 // SETAR ROTA PARA PRODUTOS
 app.use('/produtos' , rotaProdutos);
 app.use('/pedidos'  , rotaPedidos);
+app.use('/prodimagem'  , rotaProdimagem);
 //app.use('/servicos' , rotaServicos);
 
 

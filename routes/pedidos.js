@@ -31,7 +31,7 @@ router.get('/', (req, res, next) => {
               quantidade: pedido.quantidade,
                 request: {
                   tipo: 'GET',
-                  descricao: 'Retorna o dados de um pedido específico',
+                  descricao: 'Retorna todos os produtos',
                   url: 'http://localhost:4343/pedidos/' + pedido.id_pedido
                 }
               }                                                                                                                                                                                                                                                                                                                                   
@@ -176,5 +176,4 @@ router.get('/:id_pedido', (req, res, next) =>{
       return res.status(200).send(response);               
     }); 
 });
-
 module.exports = router;
