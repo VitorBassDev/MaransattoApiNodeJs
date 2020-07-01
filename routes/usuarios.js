@@ -1,6 +1,7 @@
 const express = require ('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // CRIAÇÃO DE ROTAS DE CADASTRO DE DE LOGIN
 router.post('/cadastro', (req, res, next) =>{
@@ -40,6 +41,42 @@ router.post('/cadastro', (req, res, next) =>{
         });
     }
   });  
+});
+
+
+router.post('/login', (req, res, next) => {
+  
+  req.connection.query('SELECT * FROM usuarios WHERE email = ?', 
+    [req.body.email], 
+      (err, result, fields) => {
+        if(err) {return res.status(500).send({err: error})}
+        
+        if(result.length < 1 ){
+        return res.status(401).send({mensagem: "Não Autorizado - Falha na Autenticação"});
+      }
+        bcrypt.compare(req.body.senha, result[0].senha, (err, results) =>{
+          if(err){
+            return res.status(401).send({mensagem: "Não Autorizado - Falha na Autenticação"});
+          }
+          if(results) {
+              let token = jwt.sign ({
+              id_usuario: result[0].id_usuario,
+              email: result[0].email
+            }, 
+            process.env.JWT_KEY,
+            {
+              expiresIn: "1h",
+            });
+
+            return res.status(200).send({
+              mensagem: "Autenticado com Sucesso",
+              token: token
+            });
+
+          }
+          return res.status(401).send({mensagem: "Não Autorizado - Falha na Autenticação"});
+        });  
+    });
 });
 
 module.exports = router;

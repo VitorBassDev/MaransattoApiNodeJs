@@ -5,7 +5,9 @@
         "MYSQL_DATABASE": "ecommerce" ,
         "MYSQL_USER": "nodejs",
         "MYSQL_PASSWORD" : "root" ,
-        "MYSQL_PORT": 3360
+        "MYSQL_PORT": 3360,
+
+        "JWT_KEY" : "segredo"
     }
     
 }
