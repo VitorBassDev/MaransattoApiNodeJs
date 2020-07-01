@@ -1,0 +1,61 @@
+{
+    "sqltools.connections": [
+        {
+            "askForPassword": false,
+            "database": "ecommerce",
+            "driver": "MySQL",
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "name": "ApiRest",
+            "password": "root",
+            "port": 3306,
+            "previewLimit": 50,
+            "server": "localhost",
+            "username": "root"
+        },
+        {
+            "askForPassword": false,
+            "database": "ecommerce",
+            "driver": "MySQL",
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "name": "ApiRest",
+            "password": "root",
+            "port": 3306,
+            "previewLimit": 50,
+            "server": "localhost",
+            "username": "root"
+        },
+        {
+            "askForPassword": false,
+            "database": "ecommerce",
+            "driver": "MySQL",
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "name": "ApiNode",
+            "password": "root",
+            "port": 3306,
+            "previewLimit": 50,
+            "server": "localhost",
+            "username": "root"
+        },
+        {
+            "askForPassword": false,
+            "database": "ecommerce",
+            "driver": "MySQL",
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "name": "ApiNode",
+            "password": "toor",
+            "port": 3306,
+            "previewLimit": 50,
+            "server": "localhost",
+            "username": "root"
+        }
+    ],
+    "editor.tabSize": 2
+}

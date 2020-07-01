@@ -1,7 +1,33 @@
 const express = require ('express');
 const router = express.Router();
 const multer = require('multer');
-const upload = multer ({dest: 'uploads/'});
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb){
+      cb(null, './uploads/');
+    },
+    filename: function(req, file, cb){
+      cb(null, new Date().toISOString() + file.originalname);
+      //cb(null, file.originalname);
+    }
+});
+
+/*
+const fileFilter = (req, file, cb)=>{
+  if(file.mimetype === 'imagem/jpg'){
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+}
+*/
+const upload = multer ({
+  storage: storage,
+  limits: {
+    fileSize: 1024 * 1024 * 5
+  }, 
+  //fileFilter: fileFilter
+});
 /**
  * CRIAÇÃO DAS ROTAS - PRODUTOS 
  * GET | POST | PATCH | DELETE 
@@ -30,6 +56,7 @@ router.get('/',(req, res, next) => {
                 id_produto: prod.id_produto,
                 nome: prod.nome,
                 preco: prod.preco,
+                imagem_produto: prod.imagem_produto,
                   request: {
                     tipo: 'GET',
                     descricao: 'Retorna todos os Produtos',
@@ -45,18 +72,20 @@ router.get('/',(req, res, next) => {
 /**
  * ROTA POST(INSERIR)
  */
-router.post('/', (upload.single('produto_imagem') ), (req , res, next) =>{
+router.post('/', upload.single('imagem_produto'), (req , res, next) =>{
     console.log(req.file);
     const produto = 
     {
         nome: req.body.nome,
-        preco: req.body.preco
+        preco: req.body.preco,
+        produto_imagem: req.file.produto_imagem
     }
     req.connection.query(
-      'INSERT INTO produtos (nome, preco) VALUES (?, ?)', 
+      'INSERT INTO produtos (nome, preco, imagem_produto) VALUES (?, ?, ?)', 
       [
         req.body.nome,
-        req.body.preco
+        req.body.preco,
+        req.file.path
       ], 
         function (err, result){
           if(err) {
@@ -68,6 +97,7 @@ router.post('/', (upload.single('produto_imagem') ), (req , res, next) =>{
             id_produto: result.id_produto,
             nome: req.body.nome,
             preco: req.body.preco,
+            imagem_produto: req.file.path,
             request: {
               tipo: 'POST',
               descricao: 'INSERE UM PRODUTO',

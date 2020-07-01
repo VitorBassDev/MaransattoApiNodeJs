@@ -1,5 +1,6 @@
 const express = require ('express');
 const app = express();
+const path = require('path');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 //app.use(cors());
@@ -15,11 +16,14 @@ MiddlewareDB = require('./middleware_bd');
 // CRIAR ROTA
 const rotaProdutos = require('./routes/produtos');
 const rotaPedidos  = require('./routes/pedidos');
+const rotaUsuarios = require('./routes/usuarios');
 const rotaProdimagem  = require('./routes/prodimagem');
+const { static } = require('express');
 //const rotaServicos = require('./routes/servicos');
 
 //SETAR LOGS
 app.use(morgan('dev'));
+app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({extended: false})); // apenas arquivos simples
 app.use(bodyParser.json());
 
@@ -49,6 +53,8 @@ app.use(MiddlewareDB(pool));
 app.use('/produtos' , rotaProdutos);
 app.use('/pedidos'  , rotaPedidos);
 app.use('/prodimagem'  , rotaProdimagem);
+app.use('/usuarios'  , rotaUsuarios);
+
 //app.use('/servicos' , rotaServicos);
 
 
