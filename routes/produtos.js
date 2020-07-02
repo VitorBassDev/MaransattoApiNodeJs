@@ -1,5 +1,6 @@
 const express = require ('express');
 const router = express.Router();
+const login = require('../middleware/login');
 
 /**
  * CRIAÇÃO DAS ROTAS - PRODUTOS 
@@ -14,7 +15,7 @@ const router = express.Router();
  /**
  * ROTA GET(BUSCAR)
  */
-router.get('/', (req, res, next) => {
+router.get('/', login, (req, res, next) => {
   req.connection.query(
     'SELECT * FROM produtos', 
       (err, result) => 
@@ -44,9 +45,9 @@ router.get('/', (req, res, next) => {
 /**
  * ROTA POST(INSERIR)
  */
-router.post('/', (req , res, next) =>{
+router.post('/', login, (req , res, next) =>{
     const produto = 
-    {
+    {   
         nome: req.body.nome,
         preco: req.body.preco
     }
